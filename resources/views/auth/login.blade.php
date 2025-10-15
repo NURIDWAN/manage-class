@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Masuk Dashboard Kelas</title>
+        <title>Masuk {{ \App\Support\Settings::appName() }}</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -30,7 +30,7 @@
                         KK
                     </span>
                     <div>
-                        <p class="text-xs uppercase tracking-[0.35em] text-amber-300/80">Dashboard Kelas</p>
+                        <p class="text-xs uppercase tracking-[0.35em] text-amber-300/80">{{ \App\Support\Settings::appName() }}</p>
                         <h1 class="mt-3 text-3xl font-semibold text-white">Masuk ke Akun Anda</h1>
                         <p class="mt-2 text-sm text-slate-300">
                             Gunakan email mahasiswa yang terdaftar untuk mengakses informasi kelas.

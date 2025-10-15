@@ -7,7 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class UserDashboardController extends Controller
+class DashboardCashController extends Controller
 {
     public function __invoke(Request $request): RedirectResponse|View
     {
@@ -20,17 +20,13 @@ class UserDashboardController extends Controller
         }
 
         $builder = new DashboardDataBuilder($user);
-        $stats = $builder->stats();
-        $cashSummary = $builder->cashSummary();
-        $announcements = $builder->announcementsAndEvents();
-        return view('dashboard.overview', [
+
+        return view('dashboard.cash', [
             'user' => $user,
-            'stats' => $stats,
-            'cashSummary' => $cashSummary,
-            'upcomingEvents' => $announcements['upcomingEvents'],
-            'recentAnnouncements' => $announcements['recentAnnouncements'],
+            'stats' => $builder->stats(),
+            'cashSummary' => $builder->cashSummary(),
             'announcementBanner' => $builder->latestAnnouncementBanner(),
-            'pageTitle' => 'Dashboard',
+            'pageTitle' => 'Uang Kas',
         ]);
     }
 }

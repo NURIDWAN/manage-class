@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Announcement;
+use App\Models\CashExpense;
 use App\Models\CashPayment;
 use App\Models\ClassFund;
 use App\Models\Event;
@@ -23,10 +24,28 @@ class DashboardStats extends StatsOverviewWidget
             Card::make('Kegiatan Terjadwal', Event::count())
                 ->description('Total kegiatan kelas')
                 ->icon('heroicon-o-calendar-days'),
-            Card::make('Pembayaran Kas', Number::currency(CashPayment::sum('amount'), 'IDR'))
+            Card::make(
+                'Pembayaran Kas',
+                Number::currency(
+                    CashPayment::query()->where('status', 'confirmed')->sum('amount'),
+                    'IDR'
+                )
+            )
                 ->description('Nominal pembayaran kas tercatat')
                 ->icon('heroicon-o-banknotes'),
-            Card::make('Saldo Dana Kelas', Number::currency(ClassFund::sum('total_balance'), 'IDR'))
+            Card::make(
+                'Pengeluaran Kas',
+                Number::currency(
+                    CashExpense::query()->where('status', 'confirmed')->sum('amount'),
+                    'IDR'
+                )
+            )
+                ->description('Total kas keluar yang terealisasi')
+                ->icon('heroicon-o-arrow-trending-down'),
+            Card::make(
+                'Saldo Dana Kelas',
+                Number::currency(ClassFund::query()->value('total_balance') ?? 0, 'IDR')
+            )
                 ->description('Total dana kelas terkumpul')
                 ->icon('heroicon-o-presentation-chart-line'),
         ];

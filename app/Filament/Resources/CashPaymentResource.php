@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CashPaymentResource\Pages;
 use App\Models\CashPayment;
+use App\Support\Settings;
 use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Tables;
@@ -26,12 +27,18 @@ class CashPaymentResource extends Resource
                 ->label('Nama Mahasiswa'),
             Forms\Components\TextInput::make('amount')
                 ->label('Jumlah (Rp)')
-                ->default(10000)
+                ->default(fn () => Settings::weeklyCashAmount())
                 ->numeric()
-                ->disabled()
-                ->dehydrated(true)
-                
-                ->helperText('Iuran kas mingguan akan otomatis bernilai Rp 10.000.'),
+                ->minValue(0)
+                ->helperText(fn (): string => 'Nominal default Rp ' . number_format(Settings::weeklyCashAmount(), 0, ',', '.') . ' dan bisa disesuaikan sesuai pembayaran.'),
+            Forms\Components\Select::make('payment_method')
+                ->label('Metode Pembayaran')
+                ->options([
+                    'cash' => 'Tunai',
+                    'transfer' => 'Transfer',
+                ])
+                ->default('cash')
+                ->required(),
             Forms\Components\Placeholder::make('auto_info')
                 ->label('Konfirmasi Otomatis')
                 ->content('Tanggal pembayaran dan status akan otomatis diisi sebagai hari ini dan terkonsfirmasi.'),
@@ -48,6 +55,17 @@ class CashPaymentResource extends Resource
             Tables\Columns\TextColumn::make('user.name')->label('Mahasiswa'),
             Tables\Columns\TextColumn::make('amount')->money('IDR', true)->label('Jumlah'),
             Tables\Columns\TextColumn::make('date')->date(),
+            Tables\Columns\BadgeColumn::make('payment_method')
+                ->label('Metode')
+                ->colors([
+                    'primary' => 'cash',
+                    'warning' => 'transfer',
+                ])
+                ->formatStateUsing(fn (string $state): string => match ($state) {
+                    'cash' => 'Tunai',
+                    'transfer' => 'Transfer',
+                    default => ucfirst($state),
+                }),
             Tables\Columns\BadgeColumn::make('status')
                 ->colors([
                     'warning' => 'pending',
@@ -93,17 +111,19 @@ class CashPaymentResource extends Resource
 
     public static function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['amount'] = $data['amount'] ?? 10000;
+        $data['amount'] = $data['amount'] ?? Settings::weeklyCashAmount();
         $data['date'] = $data['date'] ?? Carbon::today()->toDateString();
         $data['status'] = $data['status'] ?? 'confirmed';
+        $data['payment_method'] = $data['payment_method'] ?? 'cash';
 
         return $data;
     }
 
     public static function mutateFormDataBeforeSave(array $data): array
     {
-        $data['amount'] = $data['amount'] ?? 10000;
+        $data['amount'] = $data['amount'] ?? Settings::weeklyCashAmount();
         $data['date'] = $data['date'] ?? Carbon::today()->toDateString();
+        $data['payment_method'] = $data['payment_method'] ?? 'cash';
 
         return $data;
     }

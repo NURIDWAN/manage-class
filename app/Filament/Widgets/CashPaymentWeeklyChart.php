@@ -26,6 +26,7 @@ class CashPaymentWeeklyChart extends ChartWidget
             ->selectRaw('DATE_FORMAT(date, "%x-%v") as period, SUM(amount) as total')
             ->whereBetween('date', [$startDate, $endDate])
             ->whereNotNull('date')
+            ->where('status', 'confirmed')
             ->groupBy('period')
             ->orderBy('period')
             ->pluck('total', 'period');

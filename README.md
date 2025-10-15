@@ -1,71 +1,135 @@
-<<<<<<< HEAD
-# manage-class
-Website untuk menegement kelas termasu uang kas, pengumuman, jadwal pelajaran dan lain lain
-=======
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Manajemen Kelas — Dokumentasi
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Repositori ini berisi aplikasi manajemen kelas berbasis Laravel dengan integrasi Filament Admin untuk mengelola pembayaran kas, pengumuman, jadwal, dan pengguna. Dokumentasi berikut menjelaskan langkah instalasi, konfigurasi, dan fitur utama.
 
-## About Laravel
+## Persyaratan Sistem
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP >= 8.2 dengan ekstensi: `ctype`, `fileinfo`, `mbstring`, `openssl`, `pdo`, `tokenizer`
+- Composer
+- Node.js & npm (atau bun/PNPM sesuai preferensi)
+- MySQL/MariaDB atau database lain yang didukung Laravel
+- Git
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Instalasi Lokal
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```bash
+git clone https://github.com/your-org/class-manager.git
+cd class-manager
+cp .env.example .env
+composer install
+npm install
+php artisan key:generate
+```
 
-## Learning Laravel
+Sesuaikan `.env` dengan kredensial database serta pengaturan aplikasi:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```env
+APP_NAME="Manajemen Kelas"
+APP_URL=http://class-manager.test
+DB_DATABASE=class_manager
+DB_USERNAME=root
+DB_PASSWORD=secret
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+CLASS_APP_NAME="Manajemen Kelas"
+CLASS_WEEKLY_CASH_AMOUNT=10000
+CLASS_GITHUB_URL=https://github.com/your-org/class-manager
+CLASS_FOOTER_TEXT="Dikelola oleh Komunitas Kelas Kompak"
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Migrasi & Seed
 
-## Laravel Sponsors
+```bash
+php artisan migrate
+php artisan db:seed
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- Seeder akan membuat akun demo (superadmin, admin, user) serta pengaturan default.
 
-### Premium Partners
+### Build Frontend & Jalankan Server
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```bash
+npm run dev    # atau npm run build untuk production
+php artisan serve
+```
 
-## Contributing
+## Fitur Utama
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 1. Pengaturan Aplikasi
+- Kelola nama aplikasi, nominal kas mingguan, link GitHub, dan teks footer melalui menu **Pengaturan Aplikasi** di Filament.
+- Nilai ini digunakan di navbar, footer, halaman login, dan logika kas.
 
-## Code of Conduct
+### 2. Manajemen Kas
+- Input pembayaran kas (tunai/transfer), konfirmasi status, dan monitoring kas masuk/keluar.
+- Laporan kas menyediakan grafik bulanan/mingguan, daftar kas masuk/keluar, serta unduh PDF.
+- Nominal target (kas mingguan) mengikuti pengaturan dinamis.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 3. Pengiriman CSV Pengguna
+- Import melalui Filament → Pengguna → *Import CSV* dengan format kolom: `no, nama, nim, email`.
+- Sistem menambah atau memperbarui pengguna berdasarkan NIM.
 
-## Security Vulnerabilities
+### 4. Dashboard User & Admin
+- Ringkasan kas pribadi dan kelas, agenda, pengumuman terkini.
+- Banner pengumuman (marquee) ditampilkan bila ada berita terbaru.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 5. Jadwal Kuliah
+- Tampilan jadwal per hari dengan filter hari dan tabel ringkasan mingguan.
 
-## License
+## Deploy ke Production
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
->>>>>>> c3eb1f2 (First commit - initial project upload)
+1. **Dependensi & Build**
+   ```bash
+   composer install --no-dev --optimize-autoloader
+   npm ci && npm run build
+   php artisan storage:link
+   ```
+
+2. **Migrasi & Seeder**
+   ```bash
+   php artisan migrate --force
+   php artisan db:seed --class=SettingSeeder --force
+   ```
+
+3. **Optimisasi**
+   ```bash
+   php artisan config:cache
+   php artisan route:cache
+   php artisan view:cache
+   ```
+
+4. **Queue & Scheduler** (opsional)
+   - Jalankan `php artisan queue:work --daemon` bila memakai queue.
+   - Tambahkan cron `* * * * * php /path/artisan schedule:run >> /dev/null 2>&1` untuk scheduler.
+
+5. **Web Server**
+   - Arahkan root server ke direktori `public/`.
+   - Aktifkan HTTPS dan pastikan `APP_URL` menggunakan protokol yang benar.
+
+## Akun Demo (Seeder)
+
+| Role         | Email                  | Password |
+|--------------|------------------------|----------|
+| Super Admin  | `superadmin@example.com` | `password` |
+| Admin        | `admin@example.com`      | `password` |
+| User Demo    | `user@example.com`       | `password` |
+
+## Struktur Direktori Penting
+
+- `app/Filament/Resources/` – resource Filament untuk kas, pengaturan, pengguna, dll.
+- `app/Support/Settings.php` – helper mengambil nilai setting.
+- `resources/views/layouts/dashboard.blade.php` – layout utama user dengan navbar, banner, footer.
+- `database/seeders/` – seeder role, user, dan pengaturan.
+
+## Best Practice Pengembangan
+
+- Gunakan branch feature → pull request ke `main`.
+- Jalankan `php artisan test` sebelum merge/deploy.
+- Format kode mengikuti standar Laravel; gunakan Pint (`./vendor/bin/pint`) bila perlu.
+
+## Lisensi
+
+Proyek ini mengikuti lisensi MIT (sesuaikan jika berbeda).
+
+---
+
+Untuk pertanyaan atau kontribusi, silakan ajukan issue/PR di repositori GitHub proyek ini.
+
