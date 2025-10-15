@@ -30,6 +30,18 @@
                     >
                         Buka Laporan
                     </a>
+                    <a
+                        href="{{ route('dashboard.documents') }}"
+                        class="inline-flex items-center justify-center gap-2 rounded-2xl border border-amber-400/40 bg-amber-400/15 px-5 py-3 text-sm font-semibold text-amber-100 transition hover:bg-amber-400/25"
+                    >
+                        Arsip Dokumen
+                    </a>
+                    <a
+                        href="{{ route('dashboard.profile') }}"
+                        class="inline-flex items-center justify-center gap-2 rounded-2xl border border-violet-400/40 bg-violet-400/15 px-5 py-3 text-sm font-semibold text-violet-100 transition hover:bg-violet-400/25"
+                    >
+                        Atur Profil
+                    </a>
                 </div>
             </div>
         </header>

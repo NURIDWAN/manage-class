@@ -8,4 +8,3 @@ return [
         'footer_text' => env('CLASS_FOOTER_TEXT', 'Dikelola bersama oleh komunitas kelas.'),
     ],
 ];
-

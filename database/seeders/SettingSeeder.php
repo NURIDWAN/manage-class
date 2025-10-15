@@ -12,6 +12,8 @@ class SettingSeeder extends Seeder
      */
     public function run(): void
     {
+        Setting::query()->where('key', 'cash_payment_poster')->delete();
+
         $defaults = config('classmanager.defaults', []);
 
         foreach ($defaults as $key => $value) {
@@ -22,4 +24,3 @@ class SettingSeeder extends Seeder
         }
     }
 }
-

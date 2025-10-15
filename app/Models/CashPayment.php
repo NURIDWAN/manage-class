@@ -15,6 +15,7 @@ class CashPayment extends Model
         'date',
         'status',
         'payment_method',
+        'proof_path',
     ];
 
     public function user()

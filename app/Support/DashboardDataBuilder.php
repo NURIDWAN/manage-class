@@ -10,6 +10,7 @@ use App\Models\Event;
 use App\Models\User;
 use App\Support\Settings;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class DashboardDataBuilder
@@ -107,6 +108,16 @@ class DashboardDataBuilder
         ];
     }
 
+    public function paymentArchive(int $limit = 30): Collection
+    {
+        return CashPayment::query()
+            ->where('user_id', $this->user->id)
+            ->orderByDesc('date')
+            ->orderByDesc('created_at')
+            ->limit($limit)
+            ->get();
+    }
+
     public function chartData(): array
     {
         return [
@@ -198,7 +209,7 @@ class DashboardDataBuilder
 
     protected function buildMonthlyCashChart(): array
     {
-        $endDate = $this->now->copy()->endOfMonth();
+        $endDate = $this->reportDate->copy()->endOfMonth();
         $startDate = $endDate->copy()->subMonths(5)->startOfMonth();
 
         $rawData = CashPayment::query()
@@ -228,7 +239,7 @@ class DashboardDataBuilder
 
     protected function buildWeeklyCashChart(): array
     {
-        $endDate = $this->now->copy()->endOfWeek();
+        $endDate = $this->reportDate->copy()->endOfMonth()->endOfWeek();
         $startDate = $endDate->copy()->subWeeks(7)->startOfWeek();
 
         $rawData = CashPayment::query()

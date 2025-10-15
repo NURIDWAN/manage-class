@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Support\DashboardDataBuilder;
-use App\Support\Settings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class DashboardCashController extends Controller
+class CashPaymentArchiveController extends Controller
 {
-    public function __invoke(Request $request): RedirectResponse|View
+    public function __invoke(Request $request): View|RedirectResponse
     {
         $user = $request->user();
 
@@ -22,13 +21,10 @@ class DashboardCashController extends Controller
 
         $builder = new DashboardDataBuilder($user);
 
-        return view('dashboard.cash', [
+        return view('dashboard.cash-archive', [
             'user' => $user,
-            'stats' => $builder->stats(),
-            'cashSummary' => $builder->cashSummary(),
-            'announcementBanner' => $builder->latestAnnouncementBanner(),
-            'paymentPosterUrl' => Settings::cashPaymentPosterUrl(),
-            'pageTitle' => 'Uang Kas',
+            'paymentArchive' => $builder->paymentArchive(60),
+            'pageTitle' => 'Arsip Pembayaran Kas',
         ]);
     }
 }

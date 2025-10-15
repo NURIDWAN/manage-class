@@ -10,6 +10,7 @@ use Filament\Notifications\Notification;
 use Filament\Tables;
 use Filament\Resources\Resource;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class CashPaymentResource extends Resource
 {
@@ -39,6 +40,17 @@ class CashPaymentResource extends Resource
                 ])
                 ->default('cash')
                 ->required(),
+            Forms\Components\FileUpload::make('proof_path')
+                ->label('Bukti Pembayaran')
+                ->disk('public')
+                ->directory('cash-payment-proofs')
+                ->helperText('Opsional. Unggah bukti pembayaran jika diperlukan.')
+                ->downloadable()
+                ->openable()
+                ->imagePreviewHeight('150')
+                ->preserveFilenames()
+                ->acceptedFileTypes(['image/*', 'application/pdf'])
+                ->maxSize(5120),
             Forms\Components\Placeholder::make('auto_info')
                 ->label('Konfirmasi Otomatis')
                 ->content('Tanggal pembayaran dan status akan otomatis diisi sebagai hari ini dan terkonsfirmasi.'),
@@ -71,6 +83,12 @@ class CashPaymentResource extends Resource
                     'warning' => 'pending',
                     'success' => 'confirmed',
                 ]),
+            Tables\Columns\ImageColumn::make('proof_path')
+                ->label('Bukti')
+                ->disk('public')
+                ->square()
+                ->size(48)
+                ->toggleable(isToggledHiddenByDefault: true),
         ])
             ->defaultSort('date', 'desc')
             ->actions([
@@ -90,6 +108,12 @@ class CashPaymentResource extends Resource
                             ->success()
                             ->send();
                     }),
+                Tables\Actions\Action::make('view_proof')
+                    ->label('Lihat Bukti')
+                    ->icon('heroicon-o-eye')
+                    ->visible(fn (CashPayment $record): bool => (bool) $record->proof_path)
+                    ->url(fn (CashPayment $record): ?string => $record->proof_path ? Storage::disk('public')->url($record->proof_path) : null)
+                    ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])

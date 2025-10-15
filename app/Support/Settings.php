@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Models\PaymentPoster;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Cache;
 
@@ -46,6 +47,16 @@ class Settings
     public static function footerText(): string
     {
         return (string) static::get('footer_text', config('classmanager.defaults.footer_text'));
+    }
+
+    public static function cashPaymentPosterUrl(): ?string
+    {
+        $poster = PaymentPoster::query()
+            ->where('is_active', true)
+            ->orderByDesc('created_at')
+            ->first();
+
+        return $poster?->file_url;
     }
 
 }

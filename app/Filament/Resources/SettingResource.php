@@ -44,9 +44,11 @@ class SettingResource extends Resource
                 ->label(fn (callable $get) => $options[$get('key') ?? 'app_name'] ?? 'Nilai')
                 ->required()
                 ->rules(function (callable $get) {
-                    return $get('key') === 'weekly_cash_amount'
-                        ? ['required', 'numeric', 'min:0']
-                        : ['required', 'string'];
+                    if ($get('key') === 'weekly_cash_amount') {
+                        return ['required', 'numeric', 'min:0'];
+                    }
+
+                    return ['required', 'string'];
                 })
                 ->dehydrateStateUsing(function ($state, callable $get) {
                     $state = is_string($state) ? trim($state) : $state;
@@ -85,9 +87,11 @@ class SettingResource extends Resource
                 Tables\Columns\TextColumn::make('value')
                     ->label('Nilai')
                     ->formatStateUsing(function ($state, Setting $record) {
-                        return $record->key === 'weekly_cash_amount'
-                            ? 'Rp ' . number_format((int) $state, 0, ',', '.')
-                            : (string) $state;
+                        if ($record->key === 'weekly_cash_amount') {
+                            return 'Rp ' . number_format((int) $state, 0, ',', '.');
+                        }
+
+                        return (string) $state;
                     })
                     ->wrap()
                     ->searchable(),

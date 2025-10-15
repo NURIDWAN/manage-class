@@ -14,6 +14,8 @@
     $links = collect([
         ['label' => 'Ringkasan', 'route' => 'dashboard'],
         ['label' => 'Uang Kas', 'route' => 'dashboard.cash', 'auth' => true],
+        ['label' => 'Dokumen', 'route' => 'dashboard.documents', 'auth' => true],
+        ['label' => 'Profil', 'route' => 'dashboard.profile', 'auth' => true],
         ['label' => 'Laporan', 'route' => 'dashboard.reports', 'auth' => true],
         ['label' => 'Jadwal Kuliah', 'route' => 'schedule'],
     ])->filter(function (array $link): bool {
