@@ -36,13 +36,13 @@ class DashboardDataBuilder
         return [
             'announcements' => Announcement::count(),
             'events' => Event::count(),
-            'cash_total' => CashPayment::query()
+            'cash_total' => (int) CashPayment::query()
                 ->where('status', 'confirmed')
                 ->sum('amount'),
-            'cash_out_total' => CashExpense::query()
+            'cash_out_total' => (int) CashExpense::query()
                 ->where('status', 'confirmed')
                 ->sum('amount'),
-            'fund_balance' => ClassFund::query()->value('total_balance') ?? 0,
+            'fund_balance' => (int) (ClassFund::query()->value('total_balance') ?? 0),
         ];
     }
 

@@ -17,6 +17,10 @@ class ClassFund extends Model
         'last_update',
     ];
 
+    protected $casts = [
+        'last_update' => 'date',
+    ];
+
     public static function refreshTotals(): void
     {
         $totalIn = CashPayment::query()
