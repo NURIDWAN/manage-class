@@ -32,7 +32,7 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app/private'),
+            'root' => storage_path('app'),
             'serve' => true,
             'throw' => false,
             'report' => false,
@@ -40,8 +40,8 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => public_path('uploads'),
-            'url' => env('APP_URL', '') ? rtrim(env('APP_URL'), '/') . '/uploads' : '/uploads',
+            'root' => storage_path('app/public'),
+            'url' => env('APP_URL', '') ? rtrim(env('APP_URL'), '/') . '/storage' : '/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
@@ -73,6 +73,8 @@ return [
     |
     */
 
-    'links' => [],
+    'links' => [
+        public_path('storage') => storage_path('app/public'),
+    ],
 
 ];
